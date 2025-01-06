@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Launching Soon</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      background: url('./roomHero.png') no-repeat center center/cover;
+      position: relative;
+    }
+
+    .overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(255, 255, 255, 0.8);
+    }
+
+    .content {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      color: #333;
+    }
+
+    .logo-container {
+      position: relative;
+      width: 500px;
+      height: auto;
+      margin-bottom: 20px;
+    }
+
+    /* Default logo - open eye */
+    #logoOpen {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+
+    /* Blinking logo (initially hidden) */
+    #logoBlink {
+      display: none;
+      width: 100%;
+      height: auto;
+    }
+
+    button:hover~.logo-container #logoOpen {
+      display: none;
+    }
+
+    button:hover~.logo-container #logoBlink {
+      display: block;
+    }
+
+    .message {
+      font-size: 24px;
+      font-weight: bold;
+      animation: fadeIn 2s ease-in-out;
+      margin-bottom: 20px;
+    }
+
+    form {
+      margin-top: 20px;
+    }
+
+    input[type="email"] {
+      padding: 10px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      width: 250px;
+      margin-right: 10px;
+    }
+
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      background-color: #333;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #555;
+    }
+
+    @keyframes fadeIn {
+      0% {
+        opacity: 0;
+      }
+
+      100% {
+        opacity: 1;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="overlay"></div>
+
+  <div class="content">
+    <!-- Logo Container -->
+    <div class="logo-container">
+      <!-- Logo with two eyes open -->
+      <img id="logoOpen" class="logo" src="./InnLogoShadwless.svg" alt="Inn Place Open">
+      <!-- Blinking logo -->
+      <img id="logoBlink" class="logo" src="./InnLogoShadwless.svg" alt="Inn Place Blinking">
+    </div>
+
+    <div class="message">
+      Launching Soon!
+    </div>
+
+    <!-- Email Capture Form -->
+    <form id="emailForm" action="https://formspree.io/f/mlddoaez" method="POST">
+      <label>
+        <input style="border: transparent" type="email" name="email" placeholder="Enter your email" required>
+      </label>
+      <button type="submit">Notify Me</button>
+    </form>
+
+    <p id="successMessage" style="display:none; color: #144F61; margin-top: 10px;">
+      Thank you! We'll keep you updated.
+    </p>
+  </div>
+
+  <script>
+    const form = document.getElementById('emailForm');
+    const successMessage = document.getElementById('successMessage');
+    const button = document.querySelector('button');
+    const logoOpen = document.getElementById('logoOpen');
+    const logoBlink = document.getElementById('logoBlink');
+
+    // Listen for hover on button
+    button.addEventListener('mouseover', () => {
+      console.log('Button hovered: Switching logos');
+      logoOpen.style.display = 'none';
+      logoBlink.style.display = 'block';
+    });
+
+    button.addEventListener('mouseout', () => {
+      console.log('Button unhovered: Switching back logos');
+      logoOpen.style.display = 'block';
+      logoBlink.style.display = 'none';
+    });
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault(); // Prevent default form submission
+      const formData = new FormData(form);
+
+      // Send the form data to Formspree
+      fetch(form.action, {
+        method: form.method,
+        body: formData,
+        headers: {
+          Accept: 'application/json',
+        },
+      })
+        .then((response) => {
+          if (response.ok) {
+            successMessage.style.display = 'block'; // Show success message
+            form.reset(); // Clear the form
+          } else {
+            alert('There was an error. Please try again.');
+          }
+        })
+        .catch((error) => {
+          console.error('Error:', error);
+          alert('There was an error. Please try again.');
+        });
+    });
+
+    // Title blinking
+    let isOriginalTitle = true;
+    const originalTitle = "Launching Soon";
+    const alternateTitle = "Get Ready!";
+
+    setInterval(() => {
+      document.title = isOriginalTitle ? alternateTitle : originalTitle;
+      isOriginalTitle = !isOriginalTitle;
+    }, 1000);
+  </script>
+
+</body>
+
+</html>
