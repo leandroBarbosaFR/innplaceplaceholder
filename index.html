@@ -125,15 +125,14 @@
     <!-- Logo Container -->
     <div class="logo-container">
       <!-- Logo with two eyes open -->
-      <img id="logoOpen" class="logo" src="./InnLogoShadwless.svg" alt="Inn Place Open">
+      <img id="logoOpen" class="logo" src="./Inn_Logo_Frame1.svg" alt="Inn Place Open">
       <!-- Blinking logo -->
-      <img id="logoBlink" class="logo" src="./InnLogoShadwless.svg" alt="Inn Place Blinking">
+      <img id="logoBlink" class="logo" src="./Inn_Logo_Frame2.svg" alt="Inn Place Blinking">
     </div>
 
     <div class="message">
       Launching Soon!
     </div>
-
     <!-- Email Capture Form -->
     <form id="emailForm" action="https://formspree.io/f/mlddoaez" method="POST">
       <label>
@@ -146,27 +145,36 @@
       Thank you! We'll keep you updated.
     </p>
   </div>
-
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.10.1/lottie.min.js"></script>
   <script>
     const form = document.getElementById('emailForm');
     const successMessage = document.getElementById('successMessage');
     const button = document.querySelector('button');
-    const logoOpen = document.getElementById('logoOpen');
-    const logoBlink = document.getElementById('logoBlink');
+const logoOpen = document.getElementById('logoOpen');
+const logoBlink = document.getElementById('logoBlink');
+let hoverTimeout;
 
-    // Listen for hover on button
-    button.addEventListener('mouseover', () => {
-      console.log('Button hovered: Switching logos');
-      logoOpen.style.display = 'none';
-      logoBlink.style.display = 'block';
-    });
 
-    button.addEventListener('mouseout', () => {
-      console.log('Button unhovered: Switching back logos');
-      logoOpen.style.display = 'block';
-      logoBlink.style.display = 'none';
-    });
+// Listen for hover on button
+button.addEventListener('mouseover', () => {
+  console.log('Button hovered: Switching to blinking logo');
+  logoOpen.style.display = 'none';
+  logoBlink.style.display = 'block';
 
+  // After 0.3 seconds, switch back to the open logo
+  hoverTimeout = setTimeout(() => {
+    console.log('Switching back to open logo');
+    logoOpen.style.display = 'block';
+    logoBlink.style.display = 'none';
+  }, 300);
+});
+
+button.addEventListener('mouseout', () => {
+  console.log('Button unhovered: Clearing timeout');
+  clearTimeout(hoverTimeout);
+  logoOpen.style.display = 'block';
+  logoBlink.style.display = 'none';
+});
     form.addEventListener('submit', (e) => {
       e.preventDefault(); // Prevent default form submission
       const formData = new FormData(form);
